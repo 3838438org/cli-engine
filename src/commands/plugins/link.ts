@@ -1,7 +1,7 @@
 import cli from 'cli-ux'
 import { Command } from 'cli-engine-command'
-// import {LinkPlugins} from '../../plugins'
-// import path from 'path'
+import { Plugins } from '../../plugins'
+import * as path from 'path'
 
 let cliBin = 'heroku'
 let globalConfig = (<any>global).config
@@ -18,11 +18,12 @@ export default class PluginsLink extends Command {
     args: [{ name: 'path', optional: true, description: 'local file path to plugin root' }],
   }
 
+  plugins: Plugins
+
   async run() {
-    cli.log('TODO')
-    // this.plugins = new Plugins(this.config)
-    // let p = path.resolve(this.argv[0] || process.cwd())
-    // this.out.action.start(`Linking ${p}`)
-    // await this.plugins.addLinkedPlugin(p)
+    this.plugins = new Plugins({ config: this.config })
+    let p = path.resolve(this.argv[0] || process.cwd())
+    if (!this.config.debug) cli.action.start(`Linking ${p}`)
+    await this.plugins.linked.add(p)
   }
 }

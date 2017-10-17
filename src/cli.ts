@@ -70,15 +70,18 @@ export default class CLI {
 
     debug('command_manager')
     const id = this.config.argv[2]
-    const commandManager = new deps.CommandManager(config, cli)
+    let commandManager
     if (this.cmdAskingForHelp) {
       debug('asking for help')
       this.cmd = new deps.Help(config)
     } else {
+      debug('finding command')
+      commandManager = new deps.CommandManager(config, cli)
       this.cmd = await commandManager.findCommand(id || this.config.defaultCommand || 'help')
     }
 
     if (!this.cmd) {
+      if (!commandManager) commandManager = new deps.CommandManager(config, cli)
       let topic = await commandManager.findTopic(id)
       if (topic) {
         debug('showing help for %s topic', id)

@@ -1,4 +1,5 @@
 import { CorePlugins } from './core'
+import { LinkedPlugins } from './linked'
 import { UserPlugins } from './user'
 import { Plugin } from './plugin'
 import { CommandManagerBase } from '../command_managers/base'
@@ -6,12 +7,14 @@ import { Config } from 'cli-engine-config'
 
 export class Plugins extends CommandManagerBase {
   public user: UserPlugins
+  public linked: LinkedPlugins
   public core: CorePlugins
 
   constructor(options: { config: Config }) {
     super(options)
     this.core = new CorePlugins({ config: this.config })
     this.user = new UserPlugins({ config: this.config })
+    this.linked = new LinkedPlugins({ config: this.config })
   }
 
   public async listPlugins(): Promise<Plugin[]> {
